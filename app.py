@@ -99,7 +99,7 @@ else:
     st.info("Map cannot be displayed due to missing, invalid, or non-numeric location data in the filtered dataset.")
 
 st.subheader("Detailed Data Table")
-st.dataframe(filtered_df)
+# st.dataframe(filtered_df)
 
 
 # Select and rename columns for display in the table
