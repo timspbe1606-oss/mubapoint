@@ -18,6 +18,7 @@ This code creates a file named `app.py` which contains the complete Streamlit da
 streamlit_app_code = '''
 import streamlit as st
 import pandas as pd
+import openpyxl
 
 # Load the data - crucial for the Streamlit app to be standalone
 # Assuming the Excel file will be placed alongside app.py or accessible via path
