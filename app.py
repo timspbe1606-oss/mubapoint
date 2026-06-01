@@ -101,6 +101,29 @@ else:
 st.subheader("Detailed Data Table")
 st.dataframe(filtered_df)
 
+
+# Select and rename columns for display in the table
+display_columns = {
+    'nmkec': 'Kecamatan',
+    'nmdesa': 'Desa',
+    'nmsls': 'SLS',
+    'Nama Tempat': 'Nama Tempat',
+    'Alamat': 'Alamat',
+    'Kontak/No HP': 'Kontak/No HP',
+    'URL': 'URL'
+}
+
+# Filter for existing columns to avoid KeyError if a column is missing
+existing_display_columns = {col: new_name for col, new_name in display_columns.items() if col in filtered_df.columns}
+
+if existing_display_columns:
+    display_df = filtered_df[list(existing_display_columns.keys())].rename(columns=existing_display_columns)
+    st.dataframe(display_df)
+else:
+    st.warning("No display columns found in the filtered data. Showing all available columns.")
+    st.dataframe(filtered_df)
+    
+
 st.markdown("---")
 st.caption("Developed with Streamlit for Usaha Online Musi Banyuasin")
 '''
