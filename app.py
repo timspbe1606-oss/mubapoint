@@ -39,7 +39,7 @@ st.markdown("---")
 st.sidebar.header("Filter Data")
 
 # Ensure columns exist before trying to access them
-required_columns = ['nmkab', 'nmkec', 'nmdesa', 'nmsls', 'Latitude', 'Longitude']
+required_columns = ['nmkab', 'nmkec', 'nmdesa', 'nmsls', 'latitude', 'longitude']
 for col in required_columns:
     if col not in df.columns:
         st.error(f"Required column '{col}' not found in the Excel data. Please check your data file.")
