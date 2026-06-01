@@ -75,13 +75,13 @@ st.write(f"Showing {len(filtered_df)} records.")
 
 # Check for latitude and longitude and display map
 map_data_available = False
-if 'Latitude' in filtered_df.columns and 'Longitude' in filtered_df.columns:
-    map_df = filtered_df.dropna(subset=['Latitude', 'Longitude']).copy()
+if 'latitude' in filtered_df.columns and 'longitude' in filtered_df.columns:
+    map_df = filtered_df.dropna(subset=['latitude', 'longitude']).copy()
     if not map_df.empty:
         # Ensure latitude and longitude are numeric for st.map
-        map_df['Latitude'] = pd.to_numeric(map_df['Latitude'], errors='coerce')
-        map_df['Longitude'] = pd.to_numeric(map_df['Longitude'], errors='coerce')
-        map_df = map_df.dropna(subset=['Latitude', 'Longitude']) # Drop rows where conversion failed
+        map_df['latitude'] = pd.to_numeric(map_df['latitude'], errors='coerce')
+        map_df['longitude'] = pd.to_numeric(map_df['longitude'], errors='coerce')
+        map_df = map_df.dropna(subset=['latitude', 'longitude']) # Drop rows where conversion failed
         if not map_df.empty:
             map_data_available = True
         else:
@@ -94,7 +94,7 @@ else:
 
 if map_data_available:
     st.subheader("Location Map")
-    st.map(map_df[['Latitude', 'Longitude']])
+    st.map(map_df[['latitude', 'longitude']])
 else:
     st.info("Map cannot be displayed due to missing, invalid, or non-numeric location data in the filtered dataset.")
 
