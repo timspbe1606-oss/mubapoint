@@ -21,44 +21,35 @@ import pandas as pd
 import openpyxl
 
 # Load the data - crucial for the Streamlit app to be standalone
-# Assuming the Excel file will be placed alongside app.py or accessible via path
 try:
-    # Adjust path if necessary for deployment environment
     df = pd.read_excel('clean_data_with_sls_match.xlsx')
 except FileNotFoundError:
     st.error("Error: 'clean_data_with_sls_match.xlsx' not found. Please ensure it's in the same directory as app.py or the specified path.")
-    st.stop() # Stop the app if data can't be loaded
+    st.stop()
 
-# Set page configuration and title
 st.set_page_config(page_title="Usaha Online Musi Banyuasin", layout="wide")
 st.title("Usaha Online Musi Banyuasin")
 
 st.markdown("---")
 
-# Sidebar for filters
 st.sidebar.header("Filter Data")
 
-# Ensure columns exist before trying to access them
 required_columns = ['nmkab', 'nmkec', 'nmdesa', 'nmsls', 'latitude', 'longitude']
 for col in required_columns:
     if col not in df.columns:
         st.error(f"Required column '{col}' not found in the Excel data. Please check your data file.")
         st.stop()
 
-# Get unique values for dropdowns
-# Convert to string to handle potential mixed types and ensure sorting consistency
 kabupaten_options = ['All'] + sorted(df['nmkab'].astype(str).unique().tolist())
 kecamatan_options = ['All'] + sorted(df['nmkec'].astype(str).unique().tolist())
 desa_options = ['All'] + sorted(df['nmdesa'].astype(str).unique().tolist())
 sls_options = ['All'] + sorted(df['nmsls'].astype(str).unique().tolist())
 
-# Create dropdowns
 selected_kabupaten = st.sidebar.selectbox("Kabupaten", kabupaten_options)
 selected_kecamatan = st.sidebar.selectbox("Kecamatan", kecamatan_options)
 selected_desa = st.sidebar.selectbox("Desa", desa_options)
 selected_sls = st.sidebar.selectbox("SLS", sls_options)
 
-# Filter the DataFrame based on selections
 filtered_df = df.copy()
 
 if selected_kabupaten != 'All':
@@ -73,15 +64,13 @@ if selected_sls != 'All':
 st.subheader("Filtered Data Overview")
 st.write(f"Showing {len(filtered_df)} records.")
 
-# Check for latitude and longitude and display map
 map_data_available = False
 if 'latitude' in filtered_df.columns and 'longitude' in filtered_df.columns:
     map_df = filtered_df.dropna(subset=['latitude', 'longitude']).copy()
     if not map_df.empty:
-        # Ensure latitude and longitude are numeric for st.map
         map_df['latitude'] = pd.to_numeric(map_df['latitude'], errors='coerce')
         map_df['longitude'] = pd.to_numeric(map_df['longitude'], errors='coerce')
-        map_df = map_df.dropna(subset=['latitude', 'longitude']) # Drop rows where conversion failed
+        map_df = map_df.dropna(subset=['latitude', 'longitude'])
         if not map_df.empty:
             map_data_available = True
         else:
@@ -99,11 +88,8 @@ else:
     st.info("Map cannot be displayed due to missing, invalid, or non-numeric location data in the filtered dataset.")
 
 st.subheader("Detailed Data Table")
-# st.dataframe(filtered_df)
 
-
-# Select and rename columns for display in the table
-display_columns = {
+display_columns_map = {
     'nmkec': 'Kecamatan',
     'nmdesa': 'Desa',
     'nmsls': 'SLS',
@@ -134,13 +120,12 @@ if not display_df_for_editor.empty:
     )
 else:
     st.warning("No data to display in the detailed table after filtering.")
-    
 
 st.markdown("---")
 st.caption("Developed with Streamlit for Usaha Online Musi Banyuasin")
 '''
 
-with open('app.py', 'w') as f:
+with open('app.py', 'w', encoding='utf-8') as f:
     f.write(streamlit_app_code)
 
 print("Streamlit app saved to 'app.py' successfully.")
