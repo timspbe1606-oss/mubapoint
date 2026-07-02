@@ -113,15 +113,27 @@ display_columns = {
     'URL': 'URL'
 }
 
-# Filter for existing columns to avoid KeyError if a column is missing
-existing_display_columns = {col: new_name for col, new_name in display_columns.items() if col in filtered_df.columns}
+existing_display_cols_for_data_editor = [col for col in display_columns_map.keys() if col in filtered_df.columns]
+display_df_for_editor = filtered_df[existing_display_cols_for_data_editor].rename(columns=display_columns_map)
 
-if existing_display_columns:
-    display_df = filtered_df[list(existing_display_columns.keys())].rename(columns=existing_display_columns)
-    st.dataframe(display_df)
+column_config_dict = {}
+if 'URL' in existing_display_cols_for_data_editor:
+    column_config_dict['URL'] = st.column_config.LinkColumn(
+        "URL Link",
+        help="Click to open the URL",
+        max_chars=100,
+        display_text="Open Link"
+    )
+
+if not display_df_for_editor.empty:
+    st.data_editor(
+        display_df_for_editor,
+        column_config=column_config_dict,
+        hide_index=True,
+        use_container_width=True
+    )
 else:
-    st.warning("No display columns found in the filtered data. Showing all available columns.")
-    st.dataframe(filtered_df)
+    st.warning("No data to display in the detailed table after filtering.")
     
 
 st.markdown("---")
